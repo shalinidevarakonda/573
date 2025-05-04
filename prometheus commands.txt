@@ -1,0 +1,30 @@
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+helm repo add prometheus1 https://prometheus-community.github.io/helm-charts
+helm repo update
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace 
+(it may give error like this:error: INSTALLATION FAILED: Kubernetes cluster unreachable: Get "https://127.0.0.1:40099/version": dial tcp 127.0.0.1:40099: connect: connection refused)
+
+->then type below commands 
+
+1)kind create cluster --name my-cluster
+2)kubectl cluster-info --context kind-my-cluster
+3)export KUBECONFIG=~/.kube/config
+4)kubectl config get-contexts
+5)kubectl config use-context kind-my-cluster
+
+-> after giving above commands then give
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+->kubectl get pods -n monitoring
+->kubectl get svc -n monitoring
+
+->kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090 -n monitoring(after giving this command it may give error some times then give to chatgpt)
